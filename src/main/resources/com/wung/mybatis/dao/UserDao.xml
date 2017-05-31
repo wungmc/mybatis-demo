@@ -13,4 +13,7 @@
     <select id="findAllUsers" resultType="User">
         SELECT * FROM t_user
     </select>
+    <update id="update">
+
+    </update>
 </mapper>
