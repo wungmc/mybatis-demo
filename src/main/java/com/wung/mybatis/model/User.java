@@ -5,15 +5,15 @@ package com.wung.mybatis.model;
  * Created by wung on 2017/4/27.
  */
 public class User {
-    private int id;
+    private Integer id;
     private String loginName;
     private int age;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
