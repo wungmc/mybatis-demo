@@ -10,10 +10,12 @@ import java.util.List;
  */
 public interface UserDao {
     User findById(int id);
-
     List<User> findAllUsers();
 
     void insert(User user);
 
-    void update(User user);
+
+    int update(User user);
+
+    int deleteById(Integer id);
 }

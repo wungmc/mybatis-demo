@@ -3,17 +3,46 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.wung.mybatis.dao.UserDao">
+    <!--
+        select
+    -->
     <select id="findById" resultType="User" parameterType="java.lang.Integer">
         select * from t_user where id = #{id}
     </select>
+    <select id="findAllUsers" resultType="User">
+        SELECT * FROM t_user
+    </select>
+
+
+    <!--
+        insert
+    -->
     <insert id="insert" parameterType="User" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO t_user(login_name, age)
         VALUES (#{loginName}, #{age})
     </insert>
-    <select id="findAllUsers" resultType="User">
-        SELECT * FROM t_user
-    </select>
-    <update id="update">
 
+    <!--
+        update
+    -->
+    <!--会返回更新的条数-->
+    <update id="update" parameterType="User">
+        update t_user
+        set
+        <if test="loginName != null" >
+            login_name = #{loginName},
+        </if>
+        age = #{age}
+        WHERE id = #{id}
     </update>
+
+    <!--
+        delete
+    -->
+    <!--会返回更新的条数-->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM t_user
+        WHERE id = #{id}
+    </delete>
+
 </mapper>

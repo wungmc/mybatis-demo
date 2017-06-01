@@ -79,4 +79,37 @@ public class UserDaoTest {
         }
     }
 
+    @Test
+    public void update() {
+        User user = new User();
+        user.setId(10);
+//        user.setLoginName("mark2");
+        user.setAge(30);
+
+        SqlSessionFactory sessionFactory = getSqlSessionFactory();
+        SqlSession session = sessionFactory.openSession();
+        try {
+            UserDao userDaoMapping = session.getMapper(UserDao.class);
+            int count = userDaoMapping.update(user);
+            session.commit();
+            assert (count >= 0);
+            assert user.getId() != null;
+        } finally {
+            session.close();
+        }
+    }
+
+    @Test
+    public void deleteById() {
+        SqlSessionFactory sessionFactory = getSqlSessionFactory();
+        SqlSession session = sessionFactory.openSession();
+        try {
+            UserDao userDaoMapping = session.getMapper(UserDao.class);
+            int count = userDaoMapping.deleteById(13);
+            session.commit();
+            assert (count >= 0);
+        } finally {
+            session.close();
+        }
+    }
 }
