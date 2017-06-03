@@ -10,9 +10,12 @@ import java.util.List;
  */
 public interface UserDao {
     User findById(int id);
+    List<User> findByIds(List<Integer> ids);
+    List<User> findByIds2(int[] ids);// array 用法
     List<User> findAllUsers();
 
     void insert(User user);
+    int insertBatch(List<User> users);
 
 
     int update(User user);
