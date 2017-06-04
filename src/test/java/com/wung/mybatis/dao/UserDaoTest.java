@@ -1,10 +1,13 @@
 package com.wung.mybatis.dao;
 
+import com.sun.xml.internal.ws.developer.MemberSubmissionAddressing;
 import com.wung.mybatis.model.User;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -17,6 +20,8 @@ import java.util.List;
  * Created by wung on 2017/4/27.
  */
 public class UserDaoTest {
+    private SqlSession session;
+    private UserDao userDao;
 
     private static SqlSessionFactory getSqlSessionFactory() {
         SqlSessionFactory sessionFactory = null;
@@ -30,66 +35,53 @@ public class UserDaoTest {
         return sessionFactory;
     }
 
+    /**
+     * 该方法会在测试方法之前执行
+     */
+    @Before
+    public void initSessionAndUserDaoMapper() {
+        SqlSessionFactory sessionFactory = getSqlSessionFactory();
+        session = sessionFactory.openSession();
+        userDao = session.getMapper(UserDao.class);
+        assert userDao != null;
+        System.out.println("session open");
+    }
+
+    /**
+     * 该方法会在测试方法之后执行
+     */
+    @After
+    public void closeSession() {
+        session.close();
+        System.out.println("session close");
+    }
+
+
     @Test
     public void findById() {
-        SqlSessionFactory sessionFactory = getSqlSessionFactory();
-        SqlSession session = sessionFactory.openSession();
-
-        try {
-            UserDao userDaoMapping = session.getMapper(UserDao.class);
-            User user = userDaoMapping.findById(1);
-            System.out.println(user);
-            assert user != null;
-        } finally {
-            session.close();
-        }
+        User user = userDao.findById(1);
+        System.out.println(user);
+        assert user != null;
     }
 
     @Test
     public void findByIds() {
-        SqlSessionFactory sessionFactory = getSqlSessionFactory();
-        SqlSession session = sessionFactory.openSession();
-        try {
-            UserDao userDaoMapping = session.getMapper(UserDao.class);
-//            List<Integer> ids = new ArrayList(){{
-//                    add(1);
-//                    add(2);
-//            }};
-            List<Integer> ids = Arrays.asList(18, 23);
-            List<User> users = userDaoMapping.findByIds(ids);
-            assert (users.size() >= 0);
-        } finally {
-            session.close();
-        }
+        List<Integer> ids = Arrays.asList(18, 23);
+        List<User> users = userDao.findByIds(ids);
+        assert (users.size() >= 0);
     }
 
     @Test
     public void findByIds2() {
-        SqlSessionFactory sessionFactory = getSqlSessionFactory();
-        SqlSession session = sessionFactory.openSession();
-        try {
-            UserDao userDaoMapping = session.getMapper(UserDao.class);
-            int[] ids = {1, 2};
-            List<User> users = userDaoMapping.findByIds2(ids);
-            assert (users.size() >= 0);
-        } finally {
-            session.close();
-        }
+        int[] ids = {1, 2};
+        List<User> users = userDao.findByIds2(ids);
+        assert (users.size() >= 0);
     }
 
     @Test
     public void findAllUsers() {
-        SqlSessionFactory sessionFactory = getSqlSessionFactory();
-        SqlSession session = sessionFactory.openSession();
-
-        try {
-            UserDao userDaoMapping = session.getMapper(UserDao.class);
-
-            List<User> users = userDaoMapping.findAllUsers();
-            assert users.size() > 0;
-        } finally {
-            session.close();
-        }
+        List<User> users = userDao.findAllUsers();
+        assert users.size() > 0;
     }
 
 
@@ -103,16 +95,9 @@ public class UserDaoTest {
         user.setLoginName("jack");
         user.setAge(29);
 
-        SqlSessionFactory sessionFactory = getSqlSessionFactory();
-        SqlSession session = sessionFactory.openSession();
-        try {
-            UserDao userDaoMapping = session.getMapper(UserDao.class);
-            userDaoMapping.insert(user);
-            session.commit();
-            assert user.getId() != null;
-        } finally {
-            session.close();
-        }
+        userDao.insert(user);
+        session.commit();
+        assert user.getId() != null;
     }
 
     @Test
@@ -121,24 +106,16 @@ public class UserDaoTest {
         User user = new User();
         user.setLoginName("Tom");
         user.setAge(20);
+        users.add(user);
 
         User user1 = new User();
         user1.setLoginName("tony");
         user1.setAge(80);
-
-        users.add(user);
         users.add(user1);
 
-        SqlSessionFactory sessionFactory = getSqlSessionFactory();
-        SqlSession session = sessionFactory.openSession();
-        try {
-            UserDao userDaoMapping = session.getMapper(UserDao.class);
-            int count = userDaoMapping.insertBatch(users);
-            session.commit();
-            assert (count == users.size());
-        } finally {
-            session.close();
-        }
+        int count = userDao.insertBatch(users);
+        session.commit();
+        assert (count == users.size());
     }
 
 
@@ -149,30 +126,17 @@ public class UserDaoTest {
 //        user.setLoginName("mark2");
         user.setAge(30);
 
-        SqlSessionFactory sessionFactory = getSqlSessionFactory();
-        SqlSession session = sessionFactory.openSession();
-        try {
-            UserDao userDaoMapping = session.getMapper(UserDao.class);
-            int count = userDaoMapping.update(user);
-            session.commit();
-            assert (count >= 0);
-            assert user.getId() != null;
-        } finally {
-            session.close();
-        }
+        int count = userDao.update(user);
+        session.commit();
+        assert (count >= 0);
+        assert user.getId() != null;
     }
 
     @Test
     public void deleteById() {
-        SqlSessionFactory sessionFactory = getSqlSessionFactory();
-        SqlSession session = sessionFactory.openSession();
-        try {
-            UserDao userDaoMapping = session.getMapper(UserDao.class);
-            int count = userDaoMapping.deleteById(13);
-            session.commit();
-            assert (count >= 0);
-        } finally {
-            session.close();
-        }
+        int count = userDao.deleteById(13);
+        session.commit();
+        assert (count >= 0);
     }
+
 }
