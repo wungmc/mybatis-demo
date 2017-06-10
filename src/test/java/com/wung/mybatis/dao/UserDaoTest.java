@@ -1,6 +1,5 @@
 package com.wung.mybatis.dao;
 
-import com.sun.xml.internal.ws.developer.MemberSubmissionAddressing;
 import com.wung.mybatis.model.User;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -76,6 +75,31 @@ public class UserDaoTest {
         int[] ids = {1, 2};
         List<User> users = userDao.findByIds2(ids);
         assert (users.size() >= 0);
+    }
+
+    @Test
+    public void findByNameAndAge() {
+        List<User> users = userDao.findByNameAndAge("jack", 29);
+        assert users != null && users.size() >= 0;
+    }
+
+    @Test
+    public void findByNameAndAge2() {
+        List<User> users = userDao.findByNameAndAge2("jack", 29);
+        assert users != null && users.size() >= 0;
+    }
+
+    @Test
+    public void findByNameAndAge3() {
+        List<User> users = userDao.findByNameAndAge3("jack", 29);
+        assert users != null && users.size() >= 0;
+    }
+
+    @Test
+    public void findByNameAndAges() {
+        List<Integer> ages = Arrays.asList(29, 30);
+        List<User> users = userDao.findByNameAndAges("jack", ages);
+        assert users != null && users.size() >= 0;
     }
 
     @Test

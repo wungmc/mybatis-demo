@@ -27,6 +27,24 @@
             #{id}
         </foreach>
     </select>
+    <!-- 多参数时，如果不使用 @param 指定参数名，mapper 里可以用 #{0} 和 #{param1} 代替 -->
+    <select id="findByNameAndAge" resultType="User">
+        select * from t_user where login_name = #{0} and age = #{1}
+    </select>
+    <select id="findByNameAndAge2" resultType="User">
+        select * from t_user where login_name = #{param1} and age = #{param2}
+    </select>
+    <select id="findByNameAndAge3" resultType="User">
+        select * from t_user where login_name = #{loginName} and age = #{age}
+    </select>
+    <select id="findByNameAndAges" resultType="User">
+        select * from t_user
+        where login_name = #{name}
+        and age in
+        <foreach collection="ages" index="index" item="age" open="(" separator="," close=")">
+            #{age}
+        </foreach>
+    </select>
     <select id="findAllUsers" resultType="User">
         SELECT * FROM t_user
     </select>
